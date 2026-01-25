@@ -1,6 +1,7 @@
 <h1>Plant Disease Classification Using ViT (Vision Transformer)</h1>
 
 <p>This project aims to classify plant diseases from images using a pre-trained Vision Transformer (ViT) model. The dataset used consists of 87,000 RGB images of healthy and diseased crop leaves, categorized into 38 different classes. The dataset has been divided into 80% for training and 20% for validation. The final model achieves an impressive accuracy of over 99.6%.</p>
+<p><a href="https://colab.research.google.com/drive/1ssLcWrLvSAVq6YBFrcQLtez9fE80Tdxd?usp=sharing">Open plantDiseaseClassification.ipynb in Colab</a></p>
 
 <h2>Dataset</h2>
 <p>The dataset is available on <a href="https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset">Kaggle</a>. It is a recreation of the original dataset using offline augmentation. Additionally, a directory with 33 test images has been created for the prediction phase.</p>
