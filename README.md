@@ -1,48 +1,106 @@
-<h1>Plant Disease Classification Using ViT (Vision Transformer)</h1>
+# Plant Disease Classification: Hybrid Vision Transformer & EfficientNet Architecture
 
-<p>This project aims to classify plant diseases from images using a pre-trained Vision Transformer (ViT) model. The dataset used consists of 87,000 RGB images of healthy and diseased crop leaves, categorized into 38 different classes. The dataset has been divided into 80% for training and 20% for validation. The final model achieves an impressive accuracy of over 99.6%.</p>
-<p><a href="https://colab.research.google.com/drive/1ssLcWrLvSAVq6YBFrcQLtez9fE80Tdxd?usp=sharing">Open plantDiseaseClassification.ipynb in Colab</a></p>
+[![Kaggle Notebook](https://img.shields.io/badge/Kaggle-Notebook-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)]([https://www.kaggle.com/your-notebook-link](https://www.kaggle.com/code/anat3l/plantdiseaseclassificationv2))
 
-<h2>Dataset</h2>
-<p>The dataset is available on <a href="https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset">Kaggle</a>. It is a recreation of the original dataset using offline augmentation. Additionally, a directory with 33 test images has been created for the prediction phase.</p>
+---
 
-<h2>Project Structure</h2>
-<ul>
-  <li><strong>Training and Validation:</strong> 80% of the dataset is used for training, while 20% is used for validation. The dataset is preprocessed using image augmentation techniques, including random resizing, horizontal and vertical flips, Gaussian blur, and normalization.</li>
-  <li><strong>Model Architecture:</strong> We used the <code>google/vit-base-patch16-224-in21k</code> model, a pre-trained Vision Transformer model on the ImageNet-21k dataset. The model is fine-tuned for the classification task on the plant disease dataset.</li>
-  <li><strong>Metrics:</strong> The model is evaluated based on accuracy, and training is performed for 20 epochs with a learning rate of 2e-5. Gradients are accumulated over 4 steps, and the best model is saved based on the accuracy metric.</li>
-  <li><strong>Prediction:</strong> A small test set of 33 images is used for final predictions. The trained model is evaluated on this test set, and it predicts the correct class with over 99.6% accuracy.</li>
-</ul>
+## Project Overview
 
-<h2>Usage</h2>
+Disease classification models often suffer from performance degradation when introduced to new domains or environmental conditions. This project attempts to reduce that by employing a multi-stage training pipeline. The model first learns general plant disease representations on a base dataset and then adapts to a new target domain using dynamic class weighting and rehearsal buffers to retain base knowledge.
 
-<ol>
-  <li>Download the dataset from <a href="https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset">Kaggle</a>:</li>
-  <pre><code>!kaggle datasets download -d vipoooool/new-plant-diseases-dataset
-!unzip new-plant-diseases-dataset.zip</code></pre>
+**Key Features:**
 
-  <li>Install the required dependencies:</li>
-  <pre><code>!pip install evaluate accelerate datasets torch torchvision transformers</code></pre>
+- **Hybrid Architecture:** Cascaded EfficientNetV2B3 feature extractor and Vision Transformer (ViT-Base) for rich spatial and global attention representations.
+- **Domain Adaptation:** Stage-wise training with a 10% rehearsal buffer and discriminative learning rates to adapt to the Tomato-Village dataset without forgetting original classes.
+- **Explainability (XAI):** Built-in Grad-CAM++ for EfficientNet and Attention Rollout for the ViT to visualize decision-making processes.
+- **Production Ready:** ONNX inference optimization and benchmarking.
+- **Advanced Augmentations:** Integrated Mixup and CutMix in a custom training loop.
 
-  <li>Run the Python script to train the model and evaluate its performance. The script performs the following key tasks:</li>
-  <ul>
-    <li>Loads and preprocesses the dataset using image augmentation techniques.</li>
-    <li>Initializes the Vision Transformer (ViT) model with pre-trained weights from ImageNet-21k.</li>
-    <li>Trains the model and evaluates its performance on the validation set at each epoch.</li>
-    <li>Makes predictions on a test set and calculates the final accuracy.</li>
-  </ul>
-</ol>
+---
 
-<h2>Key Python Libraries</h2>
-<ul>
-  <li>Transformers (for using the Vision Transformer model)</li>
-  <li>PyTorch (for model training)</li>
-  <li>Evaluate (for loading metrics like accuracy)</li>
-  <li>Datasets (for loading the dataset in an image folder format)</li>
-</ul>
+## Model Architecture
 
-<h2>Results</h2>
-<p>The model achieves an accuracy of over 99.6% on the test set of 33 images, indicating its strong capability in classifying plant diseases based on leaf images.</p>
+The architecture is designed as a dual-output ensemble:
 
-<h2>Conclusion</h2>
-<p>This project demonstrates how transfer learning with Vision Transformer models can be highly effective in solving image classification tasks.</p>
+1. **EfficientNetV2B3 Backbone:** Acts as the primary feature extractor, trained initially to identify local disease patterns.
+2. **ViT-Base Cascade:** Receives processed feature maps and uses self-attention to correlate global contextual information.
+
+```mermaid
+graph TD
+    A[Input Image] --> B[EfficientNetV2B3 Backbone]
+    B --> C[Feature Maps]
+    C --> D[ViT-Base Cascade]
+    B --> E[Auxiliary Output]
+    D --> F[Primary Output]
+    E --> G[Dual-Output Ensemble]
+    F --> G
+    G --> H[Final Prediction]
+```
+
+---
+
+## Dataset Pipeline
+
+### Datasets Used
+
+- Plant-Doc Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/nirmalsankalana/plantdoc-dataset)) 
+- Plant Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset)) 
+- Tomato Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/mamtag/tomato-village))
+
+This project aggregates three Kaggle plant disease datasets into a unified pipeline:
+
+- **Canonical Label Mapping:** Standardizes labels across disparate data sources.
+- **Train/Val/Test Splits:** Carefully stratified to ensure balanced evaluation.
+
+---
+
+## Training Strategy
+
+### Stage 1: Base Knowledge Acquisition
+
+- **Stage 1a:** EfficientNetV2B3 backbone is trained on the primary dataset.
+- **Stage 1b:** The ViT cascade is introduced and trained alongside the backbone.
+
+### Stage 2: Domain Adaptation
+
+- Adapts the network to the specific characteristics of the `Tomato-Village` dataset.
+- Mitigates catastrophic forgetting by utilizing a rehearsal buffer composed of 10% of the original PlantVillage training data.
+- Implements dynamic class weighting to ensure balanced updates across old and new domain classes.
+
+---
+
+## Evaluation & Results
+
+The evaluation pipeline generates per-dataset and combined metrics, including detailed classification reports and confusion matrices.
+
+<p align="center">
+  <img src="imgs/CM.png" alt="Confusion Matrix - Combined Test Set" width="800">
+</p>
+
+---
+
+## Explainability (XAI)
+
+To ensure the model is focusing on actual disease symptoms rather than background artifacts:
+
+- **Grad-CAM++** is applied to the EfficientNet convolutions to highlight localized disease markers.
+- **Attention Rollout** is applied to the ViT attention heads to show global context aggregation.
+
+<p align="center">
+  <img src="imgs/XAI.png" alt="Explainability XAI Grid: Grad-CAM++ and Attention Rollout" width="800">
+</p>
+
+---
+
+## Inference and Benchmarking
+
+The final hybrid model is exported as separate ONNX graphs (EfficientNet and ViT heads). A Python ensemble pipeline loads these ONNX graphs for inference benchmarking, ensuring the model meets latency requirements for deployment.
+
+---
+
+## Usage
+
+1. Open the Kaggle Notebook: [`plantdiseaseclassificationv2.ipynb`](https://www.kaggle.com/code/anat3l/plantdiseaseclassificationv2).
+2. Use the GPU T4 and add your WandB API key.
+3. Follow the cell-by-cell execution.
+4. Check the generated `outputs/` or `assets/` directories for model checkpoints, ONNX files, wandb and evaluation plots.
