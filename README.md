@@ -1,6 +1,6 @@
 # Plant Disease Classification: Hybrid Vision Transformer & EfficientNet Architecture
 
-[![Kaggle Notebook](https://img.shields.io/badge/Kaggle-Notebook-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)]([https://www.kaggle.com/your-notebook-link](https://www.kaggle.com/code/anat3l/plantdiseaseclassificationv2))
+[![Kaggle Notebook](https://img.shields.io/badge/Kaggle-Notebook-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/code/anat3l/plantdiseaseclassificationv2)
 
 ---
 
@@ -43,9 +43,9 @@ graph TD
 
 ### Datasets Used
 
-- Plant-Doc Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/nirmalsankalana/plantdoc-dataset)) 
-- Plant Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset)) 
-- Tomato Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)]([https://www.kaggle.com/your-dataset-link](https://www.kaggle.com/datasets/mamtag/tomato-village))
+- Plant-Doc Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)](https://www.kaggle.com/datasets/nirmalsankalana/plantdoc-dataset)
+- Plant Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset) 
+- Tomato Village Dataset: [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Dataset-blue?style=for-the-badge&logo=kaggle)](https://www.kaggle.com/datasets/mamtag/tomato-village)
 
 This project aggregates three Kaggle plant disease datasets into a unified pipeline:
 
