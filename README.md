@@ -1,15 +1,4 @@
----
-title: Plant Pathology and Decision Explainability
-colorFrom: gray
-colorTo: gray
-sdk: gradio
-sdk_version: 5.33.0
-app_file: app.py
-pinned: false
-license: mit
----
-
-# Plant Pathology and Decision Explainability
+# Plant Disease Classification and Decision Explainability
 
 ### Hybrid Convolutional-Transformer Vision Architecture with Continual Domain Adaptation and Dual-Branch Interpretability
 
